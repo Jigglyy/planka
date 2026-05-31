@@ -134,6 +134,28 @@ module.exports = {
       // TODO: send webhooks
     }
 
+    // Apply the list's default labels. Created silently here (no per-label
+    // broadcast): other clients refetch the card on cardCreate, and the
+    // creator receives them via the controller response.
+    const defaultLabelIds = Array.isArray(values.list.defaultLabelIds)
+      ? values.list.defaultLabelIds
+      : [];
+
+    if (defaultLabelIds.length > 0) {
+      const boardLabels = await Label.qm.getByBoardId(values.board.id);
+      const boardLabelIds = new Set(sails.helpers.utils.mapRecords(boardLabels));
+      const labelIds = defaultLabelIds.filter((labelId) => boardLabelIds.has(labelId));
+
+      if (labelIds.length > 0) {
+        await CardLabel.qm.create(
+          labelIds.map((labelId) => ({
+            cardId: card.id,
+            labelId,
+          })),
+        );
+      }
+    }
+
     await sails.helpers.actions.createOne.with({
       webhooks,
       values: {

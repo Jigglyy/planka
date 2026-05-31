@@ -150,6 +150,12 @@ module.exports.routes = {
   'PATCH /api/base-custom-field-groups/:id': 'base-custom-field-groups/update',
   'DELETE /api/base-custom-field-groups/:id': 'base-custom-field-groups/delete',
 
+  // Fork feature (Jigglyy/planka): per-user board templates
+  'GET /api/board-templates': 'board-templates/index',
+  'POST /api/board-templates': 'board-templates/create',
+  'PATCH /api/board-templates/:id': 'board-templates/update',
+  'DELETE /api/board-templates/:id': 'board-templates/delete',
+
   'POST /api/projects/:projectId/boards': 'boards/create',
   'GET /api/boards/:id': 'boards/show',
   'PATCH /api/boards/:id': 'boards/update',
@@ -168,6 +174,7 @@ module.exports.routes = {
   'PATCH /api/lists/:id': 'lists/update',
   'POST /api/lists/:id/sort': 'lists/sort',
   'POST /api/lists/:id/move-cards': 'lists/move-cards',
+  'POST /api/lists/:id/apply-default-labels': 'lists/apply-default-labels',
   'POST /api/lists/:id/clear': 'lists/clear',
   'DELETE /api/lists/:id': 'lists/delete',
 
@@ -239,6 +246,11 @@ module.exports.routes = {
 
   'GET /favicons/*': {
     fn: protectedStaticDirServer('/favicons', () => sails.config.custom.faviconsPathSegment),
+    skipAssets: false,
+  },
+
+  'GET /link-images/*': {
+    fn: protectedStaticDirServer('/link-images', () => sails.config.custom.linkImagesPathSegment),
     skipAssets: false,
   },
 

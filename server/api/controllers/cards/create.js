@@ -214,8 +214,13 @@ module.exports = {
       })
       .intercept('positionMustBeInValues', () => Errors.POSITION_MUST_BE_PRESENT);
 
+    const cardLabels = await CardLabel.qm.getByCardId(card.id);
+
     return {
       item: card,
+      included: {
+        cardLabels,
+      },
     };
   },
 };

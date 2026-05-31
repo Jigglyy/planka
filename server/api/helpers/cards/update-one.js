@@ -423,6 +423,20 @@ module.exports = {
       }
     }
 
+    // Auto-apply the destination list's default labels and strip the source
+    // list's defaults. Skipped on cross-board moves (handled by the board
+    // transfer label logic above).
+    if (card && values.list && !values.board) {
+      await sails.helpers.lists.applyDefaultLabels.with({
+        card,
+        list: values.list,
+        removeList: inputs.list,
+        project,
+        board: inputs.board,
+        actorUser: inputs.actorUser,
+      });
+    }
+
     return card;
   },
 };

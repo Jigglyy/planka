@@ -48,6 +48,9 @@ const moveListCards = (id, data, headers) =>
 
 const clearList = (id, headers) => socket.post(`/lists/${id}/clear`, undefined, headers);
 
+const applyDefaultLabels = (id, headers) =>
+  socket.post(`/lists/${id}/apply-default-labels`, undefined, headers);
+
 const deleteList = (id, headers) =>
   socket.delete(`/lists/${id}`, undefined, headers).then((body) => ({
     ...body,
@@ -76,6 +79,7 @@ export default {
   sortList,
   moveListCards,
   clearList,
+  applyDefaultLabels,
   deleteList,
   makeHandleListDelete,
 };

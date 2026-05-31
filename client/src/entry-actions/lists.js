@@ -68,6 +68,13 @@ const moveListCardsToArchiveList = (id) => ({
   },
 });
 
+const applyDefaultLabelsToList = (id) => ({
+  type: EntryActionTypes.LIST_DEFAULT_LABELS_APPLY,
+  payload: {
+    id,
+  },
+});
+
 const clearTrashListInCurrentBoard = () => ({
   type: EntryActionTypes.TRASH_LIST_IN_CURRENT_BOARD_CLEAR,
   payload: {},
@@ -104,6 +111,7 @@ export default {
   transferList,
   sortList,
   moveListCardsToArchiveList,
+  applyDefaultLabelsToList,
   clearTrashListInCurrentBoard,
   handleListClear,
   deleteList,

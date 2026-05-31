@@ -66,7 +66,9 @@ module.exports = {
     });
 
     if (!values.card.coverAttachmentId) {
-      if (attachment.type === Attachment.Types.FILE && attachment.data.image) {
+      // FILE images expose `data.image` as an object; LINK previews expose it
+      // as the cached image filename. Either makes the card auto-cover.
+      if (attachment.data.image) {
         await sails.helpers.cards.updateOne.with({
           webhooks,
           record: values.card,

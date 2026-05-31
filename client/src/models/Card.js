@@ -297,6 +297,16 @@ export default class extends BaseModel {
         Card.withId(payload.localId).deleteWithClearable();
         Card.upsert(payload.card);
 
+        if (payload.cardLabels) {
+          payload.cardLabels.forEach(({ cardId, labelId }) => {
+            try {
+              Card.withId(cardId).labels.add(labelId);
+            } catch {
+              /* empty */
+            }
+          });
+        }
+
         break;
       case ActionTypes.CARD_CREATE__FAILURE:
         Card.withId(payload.localId).deleteWithClearable();

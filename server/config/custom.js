@@ -55,6 +55,7 @@ module.exports.custom = {
   uploadsBasePath: path.join(sails.config.appPath, 'data'),
 
   faviconsPathSegment: 'protected/favicons',
+  linkImagesPathSegment: 'protected/link-images',
   userAvatarsPathSegment: 'protected/user-avatars',
   backgroundImagesPathSegment: 'protected/background-images',
   attachmentsPathSegment: 'private/attachments',

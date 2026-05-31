@@ -44,6 +44,29 @@
     text-decoration: none;
   }
 
+  .templateButton {
+    background: transparent;
+    box-shadow: none;
+    color: #6b808c;
+    font-weight: normal;
+    margin-bottom: 8px;
+    overflow: hidden;
+    padding: 8px 11px;
+    text-align: left;
+    text-overflow: ellipsis;
+    transition: none;
+    white-space: nowrap;
+
+    &:hover {
+      background: rgba(9, 30, 66, 0.08);
+      color: #092d42;
+    }
+  }
+
+  .templateButtonIcon {
+    margin-right: 6px;
+  }
+
   .text {
     color: #444444;
     font-size: 12px;

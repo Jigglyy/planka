@@ -139,6 +139,14 @@ module.exports = {
       type: 'string',
       isIn: Object.values(Board.ImportTypes),
     },
+    // Fork feature: id of a board template to pre-populate the new board.
+    // Either a built-in id ("builtin:...") or one of the current user's
+    // own numeric template ids. Unresolved/foreign ids are ignored.
+    templateId: {
+      type: 'string',
+      isNotEmptyString: true,
+      maxLength: 128,
+    },
     requestId: {
       type: 'string',
       isNotEmptyString: true,
@@ -203,14 +211,39 @@ module.exports = {
       }
     }
 
+    // Resolve a board template if requested. Built-in ids hit the
+    // code-defined allowlist; numeric ids are owner-scoped so a user can
+    // never instantiate another user's template. Anything unresolved is
+    // silently ignored (board is still created, just empty).
+    let templateData;
+    if (inputs.templateId && !boardImport) {
+      if (BoardTemplate.isBuiltInId(inputs.templateId)) {
+        const builtIn = BoardTemplate.getBuiltInById(inputs.templateId);
+
+        if (builtIn) {
+          templateData = BoardTemplate.sanitizeData(builtIn.data);
+        }
+      } else if (/^[0-9]+$/.test(inputs.templateId)) {
+        const ownedTemplate = await BoardTemplate.qm.getOneById(inputs.templateId, {
+          userId: currentUser.id,
+        });
+
+        if (ownedTemplate) {
+          templateData = BoardTemplate.sanitizeData(ownedTemplate.data);
+        }
+      }
+    }
+
     const values = _.pick(inputs, ['position', 'name']);
 
     const { board, boardMembership } = await sails.helpers.boards.createOne.with({
       values: {
         ...values,
+        ...(templateData ? templateData.board : {}),
         project,
       },
       import: boardImport,
+      template: templateData,
       actorUser: currentUser,
       requestId: inputs.requestId,
       request: this.req,

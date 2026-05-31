@@ -51,7 +51,7 @@
  *           example: To Do
  *         color:
  *           type: string
- *           enum: [berry-red, pumpkin-orange, lagoon-blue, pink-tulip, light-mud, orange-peel, bright-moss, antique-blue, dark-granite, turquoise-sea]
+ *           enum: [muddy-grey, autumn-leafs, morning-sky, antique-blue, egg-yellow, desert-sand, dark-granite, fresh-salad, lagoon-blue, midnight-blue, light-orange, pumpkin-orange, light-concrete, sunny-grass, navy-blue, lilac-eyes, apricot-red, orange-peel, bright-moss, deep-ocean, summer-sky, berry-red, light-cocoa, grey-stone, tank-green, coral-green, sugar-plum, pink-tulip, shady-rust, wet-rock, wet-moss, turquoise-sea, lavender-fields, piggy-red, light-mud, gun-metal, modern-green, french-coast, sweet-lilac, red-burgundy]
  *           nullable: true
  *           description: Color for the list
  *           example: lagoon-blue
@@ -102,17 +102,48 @@ const TYPE_STATE_BY_TYPE = {
   [Types.CLOSED]: Types.CLOSED,
 };
 
+// Same palette as labels (see Label.js COLORS) for the full set of shades.
 const COLORS = [
-  'berry-red',
-  'pumpkin-orange',
+  'muddy-grey',
+  'autumn-leafs',
+  'morning-sky',
+  'antique-blue',
+  'egg-yellow',
+  'desert-sand',
+  'dark-granite',
+  'fresh-salad',
   'lagoon-blue',
-  'pink-tulip',
-  'light-mud',
+  'midnight-blue',
+  'light-orange',
+  'pumpkin-orange',
+  'light-concrete',
+  'sunny-grass',
+  'navy-blue',
+  'lilac-eyes',
+  'apricot-red',
   'orange-peel',
   'bright-moss',
-  'antique-blue',
-  'dark-granite',
+  'deep-ocean',
+  'summer-sky',
+  'berry-red',
+  'light-cocoa',
+  'grey-stone',
+  'tank-green',
+  'coral-green',
+  'sugar-plum',
+  'pink-tulip',
+  'shady-rust',
+  'wet-rock',
+  'wet-moss',
   'turquoise-sea',
+  'lavender-fields',
+  'piggy-red',
+  'light-mud',
+  'gun-metal',
+  'modern-green',
+  'french-coast',
+  'sweet-lilac',
+  'red-burgundy',
 ];
 
 module.exports = {
@@ -148,6 +179,11 @@ module.exports = {
       type: 'string',
       isIn: COLORS,
       allowNull: true,
+    },
+    defaultLabelIds: {
+      type: 'json',
+      defaultsTo: [],
+      columnName: 'default_label_ids',
     },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗

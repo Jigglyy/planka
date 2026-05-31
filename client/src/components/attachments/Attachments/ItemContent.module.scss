@@ -11,6 +11,19 @@
     min-height: 80px;
   }
 
+  .description {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    color: #6b808c;
+    display: -webkit-box;
+    font-size: 12px;
+    line-height: 18px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+  }
+
   .editButton {
     background: transparent;
     box-shadow: none;

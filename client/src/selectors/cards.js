@@ -11,6 +11,7 @@ import { selectPath } from './router';
 import { selectCurrentUserId } from './users';
 import { buildCustomFieldValueId } from '../models/CustomFieldValue';
 import { isLocalId } from '../utils/local-id';
+import { AttachmentTypes } from '../constants/Enums';
 
 export const makeSelectCardById = () =>
   createSelector(
@@ -362,7 +363,10 @@ export const selectImageAttachmentIdsExceptCoverForCurrentCard = createSelector(
       .toModelArray()
       .filter(
         (attachmentModel) =>
-          attachmentModel.data && attachmentModel.data.image && !attachmentModel.coveredCard,
+          attachmentModel.type === AttachmentTypes.FILE &&
+          attachmentModel.data &&
+          attachmentModel.data.image &&
+          !attachmentModel.coveredCard,
       )
       .map((attachmentModel) => attachmentModel.id);
   },

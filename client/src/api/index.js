@@ -15,6 +15,7 @@ import projects from './projects';
 import projectManagers from './project-managers';
 import backgroundImages from './background-images';
 import baseCustomFieldGroups from './base-custom-field-groups';
+import boardTemplates from './board-templates';
 import boards from './boards';
 import boardMemberships from './board-memberships';
 import labels from './labels';
@@ -46,6 +47,7 @@ export default {
   ...projectManagers,
   ...backgroundImages,
   ...baseCustomFieldGroups,
+  ...boardTemplates,
   ...boards,
   ...boardMemberships,
   ...labels,

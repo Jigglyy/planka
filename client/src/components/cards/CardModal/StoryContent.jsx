@@ -15,7 +15,12 @@ import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import { usePopupInClosableContext } from '../../../hooks';
 import { isUsableMarkdownElement } from '../../../utils/element-helpers';
-import { BoardMembershipRoles, CardTypes, ListTypes } from '../../../constants/Enums';
+import {
+  AttachmentTypes,
+  BoardMembershipRoles,
+  CardTypes,
+  ListTypes,
+} from '../../../constants/Enums';
 import { CardTypeIcons } from '../../../constants/Icons';
 import { ClosableContext } from '../../../contexts';
 import NameField from './NameField';
@@ -328,27 +333,36 @@ const StoryContent = React.memo(() => {
           >
             {(board.alwaysDisplayCardCreator || labelIds.length > 0 || coverAttachment) && (
               <div className={classNames(styles.moduleWrapper, styles.moduleWrapperAttachments)}>
-                {coverAttachment && (
-                  <div className={styles.coverWrapper}>
-                    <GalleryItem
-                      {...coverAttachment.data.image} // eslint-disable-line react/jsx-props-no-spreading
-                      original={coverAttachment.data.url}
-                      caption={coverAttachment.name}
-                    >
-                      {({ ref, open }) => (
-                        /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
-                                                    jsx-a11y/no-noninteractive-element-interactions */
-                        <img
-                          ref={ref}
-                          src={coverAttachment.data.thumbnailUrls.outside720}
-                          alt={coverAttachment.name}
-                          className={styles.cover}
-                          onClick={open}
-                        />
-                      )}
-                    </GalleryItem>
-                  </div>
-                )}
+                {coverAttachment &&
+                  (coverAttachment.type === AttachmentTypes.LINK ? (
+                    <div className={styles.coverWrapper}>
+                      <img
+                        src={coverAttachment.data.image}
+                        alt={coverAttachment.name}
+                        className={styles.cover}
+                      />
+                    </div>
+                  ) : (
+                    <div className={styles.coverWrapper}>
+                      <GalleryItem
+                        {...coverAttachment.data.image} // eslint-disable-line react/jsx-props-no-spreading
+                        original={coverAttachment.data.url}
+                        caption={coverAttachment.name}
+                      >
+                        {({ ref, open }) => (
+                          /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
+                                                      jsx-a11y/no-noninteractive-element-interactions */
+                          <img
+                            ref={ref}
+                            src={coverAttachment.data.thumbnailUrls.outside720}
+                            alt={coverAttachment.name}
+                            className={styles.cover}
+                            onClick={open}
+                          />
+                        )}
+                      </GalleryItem>
+                    </div>
+                  ))}
                 {board.alwaysDisplayCardCreator && (
                   <div className={styles.attachments}>
                     <span className={styles.attachment}>

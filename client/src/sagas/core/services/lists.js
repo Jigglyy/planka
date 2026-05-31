@@ -208,6 +208,16 @@ export function* moveListCardsToArchiveList(id) {
   yield call(moveListCards, id, archiveListId);
 }
 
+export function* applyDefaultLabelsToList(id) {
+  // The server applies the labels and broadcasts cardLabelCreate per card,
+  // so the store updates via the existing socket handlers.
+  try {
+    yield call(request, api.applyDefaultLabels, id);
+  } catch {
+    /* empty */
+  }
+}
+
 export function* clearTrashListInCurrentBoard() {
   const trashListId = yield select(selectors.selectTrashListIdForCurrentBoard);
 
@@ -271,6 +281,7 @@ export default {
   transferList,
   sortList,
   moveListCardsToArchiveList,
+  applyDefaultLabelsToList,
   clearTrashListInCurrentBoard,
   handleListClear,
   deleteList,

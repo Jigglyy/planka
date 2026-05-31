@@ -13,7 +13,7 @@ import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import { startStopwatch, stopStopwatch } from '../../../utils/stopwatch';
 import { isListArchiveOrTrash } from '../../../utils/record-helpers';
-import { BoardMembershipRoles, BoardViews } from '../../../constants/Enums';
+import { AttachmentTypes, BoardMembershipRoles, BoardViews } from '../../../constants/Enums';
 import TaskList from './TaskList';
 import DueDateChip from '../DueDateChip';
 import StopwatchChip from '../StopwatchChip';
@@ -73,7 +73,16 @@ const ProjectContent = React.memo(({ cardId }) => {
 
   const coverUrl = useSelector((state) => {
     const attachment = selectAttachmentById(state, card.coverAttachmentId);
-    return attachment && attachment.data.thumbnailUrls.outside360;
+
+    if (!attachment) {
+      return null;
+    }
+
+    if (attachment.type === AttachmentTypes.LINK) {
+      return attachment.data.image;
+    }
+
+    return attachment.data.thumbnailUrls && attachment.data.thumbnailUrls.outside360;
   });
 
   const { listName, withCreator, withAge } = useSelector((state) => {

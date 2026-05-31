@@ -11,7 +11,7 @@ import { Icon } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
 import markdownToText from '../../../utils/markdown-to-text';
-import { BoardViews } from '../../../constants/Enums';
+import { AttachmentTypes, BoardViews } from '../../../constants/Enums';
 import TimeAgo from '../../common/TimeAgo';
 import LabelChip from '../../labels/LabelChip';
 import CustomFieldValueChip from '../../custom-field-values/CustomFieldValueChip';
@@ -64,7 +64,16 @@ const StoryContent = React.memo(({ cardId }) => {
 
   const coverUrl = useSelector((state) => {
     const attachment = selectAttachmentById(state, card.coverAttachmentId);
-    return attachment && attachment.data.thumbnailUrls.outside360;
+
+    if (!attachment) {
+      return null;
+    }
+
+    if (attachment.type === AttachmentTypes.LINK) {
+      return attachment.data.image;
+    }
+
+    return attachment.data.thumbnailUrls && attachment.data.thumbnailUrls.outside360;
   });
 
   const descriptionText = useMemo(

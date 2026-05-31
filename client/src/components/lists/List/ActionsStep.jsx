@@ -15,6 +15,8 @@ import entryActions from '../../../entry-actions';
 import { useSteps } from '../../../hooks';
 import { ListTypes } from '../../../constants/Enums';
 import EditColorStep from './EditColorStep';
+import EditDefaultLabelsStep from './EditDefaultLabelsStep';
+import ApplyDefaultLabelsStep from './ApplyDefaultLabelsStep';
 import SortStep from './SortStep';
 import MoveStep from './MoveStep';
 import SelectListTypeStep from '../SelectListTypeStep';
@@ -26,6 +28,8 @@ import styles from './ActionsStep.module.scss';
 const StepTypes = {
   EDIT_TYPE: 'EDIT_TYPE',
   EDIT_COLOR: 'EDIT_COLOR',
+  EDIT_DEFAULT_LABELS: 'EDIT_DEFAULT_LABELS',
+  APPLY_DEFAULT_LABELS: 'APPLY_DEFAULT_LABELS',
   SORT: 'SORT',
   MOVE: 'MOVE',
   ARCHIVE_CARDS: 'ARCHIVE_CARDS',
@@ -74,6 +78,14 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
     openStep(StepTypes.EDIT_COLOR);
   }, [openStep]);
 
+  const handleEditDefaultLabelsClick = useCallback(() => {
+    openStep(StepTypes.EDIT_DEFAULT_LABELS);
+  }, [openStep]);
+
+  const handleApplyDefaultLabelsClick = useCallback(() => {
+    openStep(StepTypes.APPLY_DEFAULT_LABELS);
+  }, [openStep]);
+
   const handleSortClick = useCallback(() => {
     openStep(StepTypes.SORT);
   }, [openStep]);
@@ -106,6 +118,10 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
         );
       case StepTypes.EDIT_COLOR:
         return <EditColorStep listId={listId} onBack={handleBack} onClose={onClose} />;
+      case StepTypes.EDIT_DEFAULT_LABELS:
+        return <EditDefaultLabelsStep listId={listId} onBack={handleBack} />;
+      case StepTypes.APPLY_DEFAULT_LABELS:
+        return <ApplyDefaultLabelsStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.SORT:
         return <SortStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.MOVE:
@@ -150,6 +166,18 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
           <Menu.Item className={styles.menuItem} onClick={handleEditColorClick}>
             <Icon name="dot circle outline" className={styles.menuItemIcon} />
             {t('action.editColor', {
+              context: 'title',
+            })}
+          </Menu.Item>
+          <Menu.Item className={styles.menuItem} onClick={handleEditDefaultLabelsClick}>
+            <Icon name="tags" className={styles.menuItemIcon} />
+            {t('action.editDefaultLabels', {
+              context: 'title',
+            })}
+          </Menu.Item>
+          <Menu.Item className={styles.menuItem} onClick={handleApplyDefaultLabelsClick}>
+            <Icon name="paint brush" className={styles.menuItemIcon} />
+            {t('action.applyDefaultLabels', {
               context: 'title',
             })}
           </Menu.Item>

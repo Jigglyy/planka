@@ -34,6 +34,9 @@ export default function* listsWatchers() {
     takeEvery(EntryActionTypes.LIST_CARDS_TO_ARCHIVE_LIST_MOVE, ({ payload: { id } }) =>
       services.moveListCardsToArchiveList(id),
     ),
+    takeEvery(EntryActionTypes.LIST_DEFAULT_LABELS_APPLY, ({ payload: { id } }) =>
+      services.applyDefaultLabelsToList(id),
+    ),
     takeEvery(EntryActionTypes.TRASH_LIST_IN_CURRENT_BOARD_CLEAR, () =>
       services.clearTrashListInCurrentBoard(),
     ),

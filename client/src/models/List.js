@@ -53,6 +53,9 @@ export default class extends BaseModel {
     position: attr(),
     name: attr(),
     color: attr(),
+    defaultLabelIds: attr({
+      getDefault: () => [],
+    }),
     lastCard: attr({
       getDefault: () => null,
     }),

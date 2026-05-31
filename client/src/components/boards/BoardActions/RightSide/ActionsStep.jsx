@@ -17,35 +17,39 @@ import { BoardContexts, BoardMembershipRoles } from '../../../../constants/Enums
 import { BoardContextIcons } from '../../../../constants/Icons';
 import ConfirmationStep from '../../../common/ConfirmationStep';
 import CustomFieldGroupsStep from '../../../custom-field-groups/CustomFieldGroupsStep';
+import SaveAsTemplateStep from './SaveAsTemplateStep';
 
 import styles from './ActionsStep.module.scss';
 
 const StepTypes = {
   CUSTOM_FIELD_GROUPS: 'CUSTOM_FIELD_GROUPS',
   EMPTY_TRASH: 'EMPTY_TRASH',
+  SAVE_AS_TEMPLATE: 'SAVE_AS_TEMPLATE',
 };
 
 const ActionsStep = React.memo(({ onClose }) => {
   const board = useSelector(selectors.selectCurrentBoard);
 
-  const { withSubscribe, withCustomFieldGroups, withTrashEmptier } = useSelector((state) => {
-    const isManager = selectors.selectIsCurrentUserManagerForCurrentProject(state);
-    const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
+  const { withSubscribe, withCustomFieldGroups, withSaveAsTemplate, withTrashEmptier } =
+    useSelector((state) => {
+      const isManager = selectors.selectIsCurrentUserManagerForCurrentProject(state);
+      const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
 
-    let isMember = false;
-    let isEditor = false;
+      let isMember = false;
+      let isEditor = false;
 
-    if (boardMembership) {
-      isMember = true;
-      isEditor = boardMembership.role === BoardMembershipRoles.EDITOR;
-    }
+      if (boardMembership) {
+        isMember = true;
+        isEditor = boardMembership.role === BoardMembershipRoles.EDITOR;
+      }
 
-    return {
-      withSubscribe: isMember, // TODO: rename?
-      withCustomFieldGroups: isEditor,
-      withTrashEmptier: board.context === BoardContexts.TRASH && (isManager || isEditor),
-    };
-  }, shallowEqual);
+      return {
+        withSubscribe: isMember, // TODO: rename?
+        withCustomFieldGroups: isEditor,
+        withSaveAsTemplate: isMember,
+        withTrashEmptier: board.context === BoardContexts.TRASH && (isManager || isEditor),
+      };
+    }, shallowEqual);
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -87,6 +91,10 @@ const ActionsStep = React.memo(({ onClose }) => {
     openStep(StepTypes.EMPTY_TRASH);
   }, [openStep]);
 
+  const handleSaveAsTemplateClick = useCallback(() => {
+    openStep(StepTypes.SAVE_AS_TEMPLATE);
+  }, [openStep]);
+
   if (step) {
     switch (step.type) {
       case StepTypes.CUSTOM_FIELD_GROUPS:
@@ -101,6 +109,8 @@ const ActionsStep = React.memo(({ onClose }) => {
             onBack={handleBack}
           />
         );
+      case StepTypes.SAVE_AS_TEMPLATE:
+        return <SaveAsTemplateStep boardId={board.id} onBack={handleBack} onClose={onClose} />;
       default:
     }
   }
@@ -139,6 +149,14 @@ const ActionsStep = React.memo(({ onClose }) => {
               context: 'title',
             })}
           </Menu.Item>
+          {withSaveAsTemplate && (
+            <Menu.Item className={styles.menuItem} onClick={handleSaveAsTemplateClick}>
+              <Icon name="clone outline" className={styles.menuItemIcon} />
+              {t('action.saveAsTemplate', {
+                context: 'title',
+              })}
+            </Menu.Item>
+          )}
           {withTrashEmptier && (
             <>
               <hr className={styles.divider} />

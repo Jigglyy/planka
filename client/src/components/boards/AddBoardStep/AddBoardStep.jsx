@@ -15,11 +15,13 @@ import { Input, Popup } from '../../../lib/custom-ui';
 import entryActions from '../../../entry-actions';
 import { useForm, useNestedRef, useSteps } from '../../../hooks';
 import ImportStep from './ImportStep';
+import SelectTemplateStep from './SelectTemplateStep';
 
 import styles from './AddBoardStep.module.scss';
 
 const StepTypes = {
   IMPORT: 'IMPORT',
+  TEMPLATE: 'TEMPLATE',
 };
 
 const AddBoardStep = React.memo(({ onClose }) => {
@@ -29,6 +31,7 @@ const AddBoardStep = React.memo(({ onClose }) => {
   const [data, handleFieldChange, setData] = useForm({
     name: '',
     import: null,
+    template: null,
   });
 
   const [step, openStep, handleBack] = useSteps();
@@ -37,9 +40,12 @@ const AddBoardStep = React.memo(({ onClose }) => {
   const [nameFieldRef, handleNameFieldRef] = useNestedRef('inputRef');
 
   const handleSubmit = useCallback(() => {
+    const { template, ...restData } = data;
+
     const cleanData = {
-      ...data,
+      ...restData,
       name: data.name.trim(),
+      templateId: template ? template.id : null,
     };
 
     if (!cleanData.name) {
@@ -70,6 +76,20 @@ const AddBoardStep = React.memo(({ onClose }) => {
     openStep(StepTypes.IMPORT);
   }, [openStep]);
 
+  const handleTemplateSelect = useCallback(
+    (nextTemplate) => {
+      setData((prevData) => ({
+        ...prevData,
+        template: nextTemplate,
+      }));
+    },
+    [setData],
+  );
+
+  const handleTemplateClick = useCallback(() => {
+    openStep(StepTypes.TEMPLATE);
+  }, [openStep]);
+
   useEffect(() => {
     nameFieldRef.current.focus({
       preventScroll: true,
@@ -82,6 +102,10 @@ const AddBoardStep = React.memo(({ onClose }) => {
 
   if (step && step.type === StepTypes.IMPORT) {
     return <ImportStep onSelect={handleImportSelect} onBack={handleImportBack} />;
+  }
+
+  if (step && step.type === StepTypes.TEMPLATE) {
+    return <SelectTemplateStep onSelect={handleTemplateSelect} onBack={handleBack} />;
   }
 
   return (
@@ -103,6 +127,15 @@ const AddBoardStep = React.memo(({ onClose }) => {
             className={styles.field}
             onChange={handleFieldChange}
           />
+          <Button
+            type="button"
+            fluid
+            className={styles.templateButton}
+            onClick={handleTemplateClick}
+          >
+            <Icon name="clone outline" className={styles.templateButtonIcon} />
+            {data.template ? data.template.name : t('common.useTemplate')}
+          </Button>
           <div className={styles.controls}>
             <Button positive content={t('action.createBoard')} className={styles.button} />
             <Button

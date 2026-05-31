@@ -12,6 +12,10 @@ module.exports = {
     import: {
       type: 'json',
     },
+    // Fork feature: sanitized board-template blob ({ board, lists, labels }).
+    template: {
+      type: 'json',
+    },
     actorUser: {
       type: 'ref',
       required: true,
@@ -86,6 +90,11 @@ module.exports = {
 
     if (inputs.import && inputs.import.type === Board.ImportTypes.TRELLO) {
       await sails.helpers.boards.importFromTrello(board, lists, inputs.import.board);
+    } else if (inputs.template) {
+      await sails.helpers.boards.applyTemplate.with({
+        board,
+        data: inputs.template,
+      });
     }
 
     scoper.board = board;

@@ -157,14 +157,20 @@ export function* createCard(listId, data, index, autoOpen) {
   }
 
   let card;
+  let cardLabels;
   try {
-    ({ item: card } = yield call(request, api.createCard, listId, nextData));
+    ({ item: card, included: { cardLabels } = {} } = yield call(
+      request,
+      api.createCard,
+      listId,
+      nextData,
+    ));
   } catch (error) {
     yield put(actions.createCard.failure(localId, error));
     return;
   }
 
-  yield put(actions.createCard.success(localId, card));
+  yield put(actions.createCard.success(localId, card, cardLabels));
 
   if (watchForCreateCardActionTask && watchForCreateCardActionTask.isRunning()) {
     yield call(goToCard, card.id);

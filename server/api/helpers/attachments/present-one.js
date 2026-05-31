@@ -41,11 +41,17 @@ module.exports = {
         faviconUrl = `${sails.config.custom.baseUrl}/favicons/${faviconFilename}`;
       }
 
+      let image = null;
+      if (inputs.record.data.image) {
+        image = `${sails.config.custom.baseUrl}/link-images/${inputs.record.data.image}`;
+      }
+
       data = {
         ...inputs.record,
         data: {
-          ..._.omit(inputs.record.data, 'hostname'),
+          ..._.omit(inputs.record.data, ['hostname', 'image', 'metadataFetched']),
           faviconUrl,
+          image,
         },
       };
     }

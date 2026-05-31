@@ -90,6 +90,16 @@ const ItemContent = React.forwardRef(({ id, onOpen }, ref) => {
     );
   }
 
+  const isLink = attachment.type === AttachmentTypes.LINK;
+  const linkImageUrl = isLink ? attachment.data.image : null;
+
+  let thumbnailBackground;
+  if (attachment.type === AttachmentTypes.FILE && attachment.data.image) {
+    thumbnailBackground = `url("${attachment.data.thumbnailUrls.outside360}") center / cover`;
+  } else if (linkImageUrl) {
+    thumbnailBackground = `url("${linkImageUrl}") center / cover`;
+  }
+
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
                                 jsx-a11y/no-static-element-interactions */
@@ -97,10 +107,7 @@ const ItemContent = React.forwardRef(({ id, onOpen }, ref) => {
       <div
         className={styles.thumbnail}
         style={{
-          background:
-            attachment.type === AttachmentTypes.FILE &&
-            attachment.data.image &&
-            `url("${attachment.data.thumbnailUrls.outside360}") center / cover`,
+          background: thumbnailBackground,
         }}
       >
         {attachment.type === AttachmentTypes.FILE &&
@@ -120,10 +127,25 @@ const ItemContent = React.forwardRef(({ id, onOpen }, ref) => {
           ) : (
             <span className={styles.thumbnailExtension}>{attachment.data.extension || '-'}</span>
           ))}
-        {attachment.type === AttachmentTypes.LINK && <Favicon url={attachment.data.faviconUrl} />}
+        {isLink && !linkImageUrl && <Favicon url={attachment.data.faviconUrl} />}
+        {isLink && linkImageUrl && isCover && (
+          <Label
+            corner="left"
+            size="mini"
+            icon={{
+              name: 'checkmark',
+              color: 'grey',
+              inverted: true,
+            }}
+            className={styles.thumbnailLabel}
+          />
+        )}
       </div>
       <div className={styles.details}>
         <span className={styles.name}>{attachment.name}</span>
+        {isLink && attachment.data.description && (
+          <span className={styles.description}>{attachment.data.description}</span>
+        )}
         <span className={styles.information}>
           <TimeAgo date={attachment.createdAt} />
         </span>
@@ -156,6 +178,27 @@ const ItemContent = React.forwardRef(({ id, onOpen }, ref) => {
                 </span>
               </button>
             )}
+          </span>
+        )}
+        {isLink && linkImageUrl && canEdit && (
+          <span className={styles.options}>
+            <button type="button" className={styles.option} onClick={handleToggleCoverClick}>
+              <Icon
+                name="window maximize outline"
+                flipped="vertically"
+                size="small"
+                className={styles.optionIcon}
+              />
+              <span className={styles.optionText}>
+                {isCover
+                  ? t('action.removeCover', {
+                      context: 'title',
+                    })
+                  : t('action.makeCover', {
+                      context: 'title',
+                    })}
+              </span>
+            </button>
           </span>
         )}
       </div>
